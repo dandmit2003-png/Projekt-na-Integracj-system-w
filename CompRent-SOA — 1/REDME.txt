@@ -1,0 +1,19 @@
+CompRent-SOA — Integracja SOA
+
+KOMPONENTY:
+1. Frontend (index.html) — wysyła żądania do ESB z tokenem JWT.
+2. ESB/Router (esb_server.js) — autoryzacja JWT, Content-Based Router (Apple → apple_queue, reszta → windows_queue).
+3. RabbitMQ (CloudAMQP) — broker komunikatów, kolejki apple_queue i windows_queue.
+4. Worker (db_worker.js) — nasłuchuje kolejek, zapisuje do SQLite (warehouse.db), Retry Pattern (3 próby).
+
+URUCHOMIENIE (3 terminale):
+Terminal 1: cd 2_ESB_Router && node esb_server.js
+Terminal 2: cd 3_DB_Worker && node db_worker.js
+Terminal 3: cd 1_Frontend && npx serve -l 3001
+Otwórz http://localhost:3001, zaloguj się: admin@comprent.pl / admin123.
+
+WZORCE:
+- Content-Based Router (esb_server.js)
+- Message Queue (RabbitMQ)
+- Retry Pattern (db_worker.js)
+- JWT Bearer (esb_server.js + index.html)
